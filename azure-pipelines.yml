@@ -33,9 +33,4 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-- task: SpecFlowPlus@0
-  inputs:
-    projectFilePath: '.\feature'
-    projectName: 'Openccm'
-    projectLanguage: 'en'
-    workItemPrefix: 'Prefix'
+    
