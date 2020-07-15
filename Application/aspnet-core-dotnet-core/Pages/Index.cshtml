@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Reflection
 @model IndexModel
 @{
     ViewData["Title"] = "Home Page - ASP.NET Core";
@@ -9,13 +10,17 @@
         <img src="~/images/successCloudNew.svg" />
     </div>
     <div class="content">
-        <div class="tweet-container">
-            <a href="http://twitter.com/intent/tweet/?text=I%20just%20created%20a%20new%20ASP.net%20website%20on%20Azure%20using%20Azure%20DevOps%20Project&hashtags=AzureDevOpsProject%2CVSTS%20%40Azure%20%40VSTS">
-                <img src="~/images/tweetThis.svg" />
-            </a>
-        </div>
+       
         <div class="content-body">
-            <div class="success-text">Success!</div>
+            @{
+                var ver = System.Reflection.Assembly.GetAssembly(typeof(IndexModel)).GetName().Version;
+                var assemblyVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+                var fileVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion
+                    ;
+            }
+            <p>Version is : @ver</p>
+            <p>Assembly Version is : @assemblyVersion</p>
+            <p>File Version is : @fileVersion</p>
             <div class="description line-1"> Azure DevOps Project has been successfully setup</div>
             <div class="description line-2"> Your ASP.NET CORE app is up and running on Azure</div>
         </div>
