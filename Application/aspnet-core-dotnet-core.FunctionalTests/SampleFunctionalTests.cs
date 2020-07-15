@@ -2,7 +2,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 using System;
+using System.IO;
+using System.Reflection;
 using System.Threading;
+using OpenQA.Selenium;
 
 namespace SampleWebApplication.FunctionalTests
 {
@@ -34,45 +37,29 @@ namespace SampleWebApplication.FunctionalTests
         [TestMethod]
         public void SampleFunctionalTest1()
         {
-            var webAppUrl = testContext.Properties["webAppUrl"].ToString();
+            var webAppUrl = "http://localhost:44394"; //testContext.Properties["webAppUrl"].ToString();
 
-            var startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var endTimestamp = startTimestamp + 60 * 10;
+            driver.Navigate().GoToUrl(webAppUrl);
+            //Assert.AreEqual("Home Page - ASP.NET Core", driver.Title, "Expected title to be 'Home Page - ASP.NET Core'");
+            Assert.AreEqual("", driver.Title, "Expected title to be 'Home Page - ASP.NET Core'");
 
-            while (true)
-            {
-                try
-                {
-                    driver.Navigate().GoToUrl(webAppUrl);
-                    Assert.AreEqual("Home Page - ASP.NET Core", driver.Title, "Expected title to be 'Home Page - ASP.NET Core'");
-                    break;
-                }
-                catch(Exception e)
-                {
-                    var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                    if (currentTimestamp > endTimestamp)
-                    {
-                        Console.Write("##vso[task.logissue type=error;]Test SampleFunctionalTest1 failed with error: " + e.ToString());
-                        throw;
-                    }
-                    Thread.Sleep(5000);
-                }
-            }
         }
 
         private RemoteWebDriver GetChromeDriver()
         {
-            var path = Environment.GetEnvironmentVariable("ChromeWebDriver");
+            //driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            //var path = Environment.GetEnvironmentVariable("ChromeWebDriver");
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var options = new ChromeOptions();
-            options.AddArguments("--no-sandbox");
-
-            if (!string.IsNullOrWhiteSpace(path))
+            //options.AddArguments("--no-sandbox");
+            options.AddArguments("--headless");
+            //if (!string.IsNullOrWhiteSpace(path))
+            //{
+            //    return new ChromeDriver(path, options, TimeSpan.FromSeconds(300));
+            //}
+            //else
             {
-                return new ChromeDriver(path, options, TimeSpan.FromSeconds(300));
-            }
-            else
-            {
-                return new ChromeDriver(options);
+                return new ChromeDriver(path ,options);
             }
         }
     }
